@@ -32,7 +32,7 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
     }
 
     public fun addDay(day: Day): Long {
-        return dayTable.add(writableDatabase, day)
+        return dayTable.set(writableDatabase, day)
     }
 
     fun getDay(time: Date): Day? {

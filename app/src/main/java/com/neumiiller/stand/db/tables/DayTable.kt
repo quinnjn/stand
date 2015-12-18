@@ -20,14 +20,21 @@ class DayTable : Table {
 
     override fun getTableName() = "DayTable"
 
-    public fun add(wDb: SQLiteDatabase, day: Day): Long {
+    public fun set(wDb: SQLiteDatabase, day: Day): Long {
         val time = day.time
-        time.normalize()
         val values = ContentValues();
+        var id:Long = -1
+
+        time.normalize()
         values.put(KEY_CONTENT, day.content.raw)
         values.put(KEY_TIME, time.time)
 
-        return wDb.insert(getTableName(), null, values)
+        val rowsEffected = wDb.update(getTableName(), values, "$KEY_TIME = ${time.time}", null)
+        if(rowsEffected == 0) {
+            id = wDb.insert(getTableName(), null, values)
+        }
+
+        return id
     }
 
     fun get(db: SQLiteDatabase, time: Date): Day? {

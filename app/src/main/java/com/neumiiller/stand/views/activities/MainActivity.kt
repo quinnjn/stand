@@ -2,8 +2,6 @@ package com.neumiiller.stand.views.activities
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.view.View
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -12,27 +10,62 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.neumiiller.stand.R
+import com.neumiiller.stand.actor.MainActor
+import com.neumiiller.stand.models.Content
+import com.neumiiller.stand.models.Day
+import com.neumiiller.stand.presenters.MainPresenter
+import java.util.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainActor {
+
+    val presenter = MainPresenter(this, this)
+
+    var fab: FloatingActionButton? = null
+    var drawer: DrawerLayout? = null
+    var helloWorld: TextView? = null
+    var navigation: NavigationView? = null
+    var toolbar: Toolbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        connectViews()
+        initializeViews()
+        updateViews()
+    }
+
+    private fun connectViews() {
+        toolbar = findViewById(R.id.toolbar) as Toolbar
+        fab = findViewById(R.id.fab) as FloatingActionButton
+        helloWorld = findViewById(R.id.hello_world) as TextView
+        drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        navigation = findViewById(R.id.nav_view) as NavigationView
+    }
+
+    private fun initializeViews() {
         setSupportActionBar(toolbar)
-
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show() }
-
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        fab?.setOnClickListener { view ->
+            val day = Day(Date(), Content(helloWorld?.text.toString() + "."))
+            presenter.setDay(day)
+        }
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.setDrawerListener(toggle)
+        drawer?.setDrawerListener(toggle)
         toggle.syncState()
+        navigation?.setNavigationItemSelectedListener(this)
+    }
 
-        val navigationView = findViewById(R.id.nav_view) as NavigationView
-        navigationView.setNavigationItemSelectedListener(this)
+    override fun updateDay(day: Day) {
+        helloWorld?.setText(day?.content?.raw)
+    }
+
+    private fun updateViews() {
+        val day = presenter.getDay(Date())
+        if(day != null) {
+            updateDay(day)
+        }
     }
 
     override fun onBackPressed() {
