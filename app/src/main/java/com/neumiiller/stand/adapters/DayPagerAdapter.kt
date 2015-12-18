@@ -3,12 +3,10 @@ package com.neumiiller.stand.adapters
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.view.View
 import com.neumiiller.stand.db.StandDB
-import com.neumiiller.stand.listeners.OnDayChangeListener
-import com.neumiiller.stand.models.Content
 import com.neumiiller.stand.models.Day
 import com.neumiiller.stand.views.fragments.DayPageFragment
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -16,6 +14,7 @@ import java.util.*
  */
 class DayPagerAdapter(private val standDB: StandDB, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
+    private val formatter = SimpleDateFormat("EEE MMM dd")
     private val cal = Calendar.getInstance()
     private var fragment: DayPageFragment? = null
 
@@ -29,14 +28,10 @@ class DayPagerAdapter(private val standDB: StandDB, fm: FragmentManager) : Fragm
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return getDay(position)?.time.toString()
+        return formatter.format(getDay(position)?.time)
     }
 
     fun getDay(position: Int): Day? {
         return standDB.getDay(position)
-    }
-
-    fun setEditable(position: Int, onDayChangeListener: OnDayChangeListener) {
-//        fragment?.setEditable(true, onDayChangeListener)
     }
 }
