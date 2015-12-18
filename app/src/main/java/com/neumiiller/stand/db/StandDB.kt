@@ -22,14 +22,6 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
     private val dayTable = DayTable()
     private val tables = arrayOf(dayTable)
 
-    init {
-//        var now = Date()
-//        var today = getDay(now)
-//        if(today == null) {
-//            addDay(Day(now, Content("blah")))
-//        }
-    }
-
     override fun onCreate(db: SQLiteDatabase) {
         for (table in tables) {
             db.execSQL(table.create())

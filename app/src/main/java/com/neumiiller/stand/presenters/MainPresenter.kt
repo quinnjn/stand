@@ -39,13 +39,13 @@ class MainPresenter(activity: MainActivity) : OnDayChangeListener {
     }
 
     fun onFabClick(position: Int?) {
-        if (position == null) {
-            return
-        }
-        val day = pagerAdapter.getDay(position)
-        if (day != null) {
-            pagerAdapter.setEditable(position, this);
-        }
+//        if (position == null) {
+//            return
+//        }
+//        val day = pagerAdapter.getDay(position)
+//        if (day != null) {
+//            pagerAdapter.setEditable(position, this);
+//        }
     }
     override fun change(day: Day) {
         standDb.addDay(day)
