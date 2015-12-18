@@ -3,6 +3,7 @@ package com.neumiiller.stand.views.activities
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
+import android.support.design.widget.TabLayout
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.PagerTitleStrip
 import android.support.v4.view.ViewPager
@@ -10,20 +11,17 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.support.design.widget.TabLayout
 import android.view.Menu
 import android.view.MenuItem
 import com.neumiiller.stand.R
 import com.neumiiller.stand.actor.MainActor
-import com.neumiiller.stand.adapters.DayPagerAdapter
-import com.neumiiller.stand.db.StandDB
 import com.neumiiller.stand.models.Day
 import com.neumiiller.stand.presenters.MainPresenter
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainActor {
 
-    private val presenter = MainPresenter(this, this)
+    private val presenter = MainPresenter(this)
 
     private var fab: FloatingActionButton? = null
     private var drawer: DrawerLayout? = null
@@ -53,15 +51,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initializeViews() {
         setSupportActionBar(toolbar)
         fab?.setOnClickListener { view ->
-//            val day = Day(Date(), Content(helloWorld?.text.toString() + "."))
-//            presenter.setDay(day)
+            presenter.onFabClick(pager?.currentItem)
         }
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer?.setDrawerListener(toggle)
         toggle.syncState()
         navigation?.setNavigationItemSelectedListener(this)
-        pager?.adapter = DayPagerAdapter(StandDB(this), supportFragmentManager)
+        pager?.adapter = presenter.pagerAdapter
         tabs?.setupWithViewPager(pager)
     }
 
@@ -70,7 +67,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun updateViews() {
         val day = presenter.getDay(Date())
-        if(day != null) {
+        if (day != null) {
             updateDay(day)
         }
     }

@@ -3,6 +3,8 @@ package com.neumiiller.stand.db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import com.neumiiller.stand.BuildConfig
 import com.neumiiller.stand.db.tables.DayTable
 import com.neumiiller.stand.models.Content
 import com.neumiiller.stand.models.Day
@@ -17,12 +19,16 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
         private val VERSION = 1
     }
 
-    init {
-
-    }
-
     private val dayTable = DayTable()
     private val tables = arrayOf(dayTable)
+
+    init {
+//        var now = Date()
+//        var today = getDay(now)
+//        if(today == null) {
+//            addDay(Day(now, Content("blah")))
+//        }
+    }
 
     override fun onCreate(db: SQLiteDatabase) {
         for (table in tables) {
@@ -37,6 +43,7 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
     }
 
     public fun addDay(day: Day): Long {
+        if(BuildConfig.DEBUG) Log.d("addDay", day.toString())
         return dayTable.set(writableDatabase, day)
     }
 
@@ -50,22 +57,6 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
 
     fun getDayCount(): Int {
         var count = dayTable.count(readableDatabase).toInt()
-
-        if (count == 0) {
-            var cal = Calendar.getInstance()
-            cal.add(Calendar.YEAR, -1)
-            addDay(Day(cal.time, Content(cal.time.time.toString())))
-            cal.add(Calendar.YEAR, -1)
-            addDay(Day(cal.time, Content(cal.time.time.toString())))
-            cal.add(Calendar.YEAR, -1)
-            addDay(Day(cal.time, Content(cal.time.time.toString())))
-            cal.add(Calendar.YEAR, -1)
-            addDay(Day(cal.time, Content(cal.time.time.toString())))
-            cal.add(Calendar.YEAR, -1)
-            addDay(Day(cal.time, Content(cal.time.time.toString())))
-            count = dayTable.count(readableDatabase).toInt()
-        }
-
         return count
     }
 }

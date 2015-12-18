@@ -42,7 +42,7 @@ class DayTable : Table {
         val query = "SELECT * FROM ${getTableName()} ORDER BY $KEY_TIME DESC LIMIT $position,1"
         val cursor = db.rawQuery(query, null);
         if(cursor == null || cursor.count == 0) {
-            throw RuntimeException("Nope!")
+           return Day(Date(), Content(""))
         }
         cursor.moveToFirst()
         val date = Date(cursor.getLong(cursor.getColumnIndex(KEY_TIME)))
