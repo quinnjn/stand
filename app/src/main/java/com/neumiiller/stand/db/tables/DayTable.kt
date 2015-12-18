@@ -21,6 +21,12 @@ class DayTable : Table {
 
     override fun getTableName() = "DayTable"
 
+    override fun initializeTable(wDb: SQLiteDatabase) {
+        if(get(wDb, Date()) == null) {
+            set(wDb, Day(Date(), Content("")))
+        }
+    }
+
     public fun set(wDb: SQLiteDatabase, day: Day): Long {
         val time = day.time
         val values = ContentValues();

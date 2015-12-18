@@ -24,7 +24,7 @@ class DayPagerAdapter(private val standDB: StandDB, fm: FragmentManager) : Fragm
     }
 
     override fun getCount(): Int {
-        return standDB.getDayCount() + 1;
+        return standDB.getDayCount();
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

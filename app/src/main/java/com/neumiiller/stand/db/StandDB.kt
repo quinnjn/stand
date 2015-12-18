@@ -48,6 +48,9 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
     }
 
     fun getDayCount(): Int {
+        if(getDay(Date()) == null) {
+            addDay(Day(Date(), Content("")))
+        }
         var count = dayTable.count(readableDatabase).toInt()
         return count
     }
