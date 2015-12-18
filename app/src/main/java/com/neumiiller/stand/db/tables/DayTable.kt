@@ -1,6 +1,7 @@
 package com.neumiiller.stand.db.tables
 
 import android.content.ContentValues
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import com.neumiiller.stand.extensions.normalize
 import com.neumiiller.stand.models.Content
@@ -37,6 +38,18 @@ class DayTable : Table {
         return id
     }
 
+    fun get(db: SQLiteDatabase, position: Int): Day {
+        val query = "SELECT * FROM ${getTableName()} ORDER BY $KEY_TIME DESC LIMIT $position,1"
+        val cursor = db.rawQuery(query, null);
+        if(cursor == null || cursor.count == 0) {
+            throw RuntimeException("Nope!")
+        }
+        cursor.moveToFirst()
+        val date = Date(cursor.getLong(cursor.getColumnIndex(KEY_TIME)))
+        val content = Content(cursor.getString(cursor.getColumnIndex(KEY_CONTENT)))
+        return Day(date, content)
+    }
+
     fun get(db: SQLiteDatabase, time: Date): Day? {
         time.normalize()
         val query = "SELECT * FROM ${getTableName()} WHERE $KEY_TIME == ${time.time}"
@@ -48,5 +61,9 @@ class DayTable : Table {
         val date = Date(cursor.getLong(cursor.getColumnIndex(KEY_TIME)))
         val content = Content(cursor.getString(cursor.getColumnIndex(KEY_CONTENT)))
         return Day(date, content)
+    }
+
+    fun count(db: SQLiteDatabase): Long {
+        return DatabaseUtils.queryNumEntries(db, getTableName())
     }
 }

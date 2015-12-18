@@ -4,29 +4,34 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.PagerTitleStrip
+import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.support.design.widget.TabLayout
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import com.neumiiller.stand.R
 import com.neumiiller.stand.actor.MainActor
-import com.neumiiller.stand.models.Content
+import com.neumiiller.stand.adapters.DayPagerAdapter
+import com.neumiiller.stand.db.StandDB
 import com.neumiiller.stand.models.Day
 import com.neumiiller.stand.presenters.MainPresenter
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainActor {
 
-    val presenter = MainPresenter(this, this)
+    private val presenter = MainPresenter(this, this)
 
-    var fab: FloatingActionButton? = null
-    var drawer: DrawerLayout? = null
-    var helloWorld: TextView? = null
-    var navigation: NavigationView? = null
-    var toolbar: Toolbar? = null
+    private var fab: FloatingActionButton? = null
+    private var drawer: DrawerLayout? = null
+    private var navigation: NavigationView? = null
+    private var pager: ViewPager? = null
+    private var pagerTitleStrip: PagerTitleStrip? = null
+    private var tabs: TabLayout? = null
+    private var toolbar: Toolbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,28 +42,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun connectViews() {
-        toolbar = findViewById(R.id.toolbar) as Toolbar
         fab = findViewById(R.id.fab) as FloatingActionButton
-        helloWorld = findViewById(R.id.hello_world) as TextView
         drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         navigation = findViewById(R.id.nav_view) as NavigationView
+        pager = findViewById(R.id.pager) as ViewPager
+        tabs = findViewById(R.id.sliding_tab_strip) as TabLayout
+        toolbar = findViewById(R.id.toolbar) as Toolbar
     }
 
     private fun initializeViews() {
         setSupportActionBar(toolbar)
         fab?.setOnClickListener { view ->
-            val day = Day(Date(), Content(helloWorld?.text.toString() + "."))
-            presenter.setDay(day)
+//            val day = Day(Date(), Content(helloWorld?.text.toString() + "."))
+//            presenter.setDay(day)
         }
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer?.setDrawerListener(toggle)
         toggle.syncState()
         navigation?.setNavigationItemSelectedListener(this)
+        pager?.adapter = DayPagerAdapter(StandDB(this), supportFragmentManager)
+        tabs?.setupWithViewPager(pager)
     }
 
     override fun updateDay(day: Day) {
-        helloWorld?.setText(day?.content?.raw)
     }
 
     private fun updateViews() {

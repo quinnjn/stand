@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.neumiiller.stand.db.tables.DayTable
+import com.neumiiller.stand.models.Content
 import com.neumiiller.stand.models.Day
 import java.util.*
 
@@ -14,6 +15,10 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
     companion object {
         private val NAME = StandDB::class.java.simpleName
         private val VERSION = 1
+    }
+
+    init {
+
     }
 
     private val dayTable = DayTable()
@@ -37,5 +42,30 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
 
     fun getDay(time: Date): Day? {
         return dayTable.get(readableDatabase, time)
+    }
+
+    fun getDay(position: Int): Day {
+        return dayTable.get(readableDatabase, position)
+    }
+
+    fun getDayCount(): Int {
+        var count = dayTable.count(readableDatabase).toInt()
+
+        if (count == 0) {
+            var cal = Calendar.getInstance()
+            cal.add(Calendar.YEAR, -1)
+            addDay(Day(cal.time, Content(cal.time.time.toString())))
+            cal.add(Calendar.YEAR, -1)
+            addDay(Day(cal.time, Content(cal.time.time.toString())))
+            cal.add(Calendar.YEAR, -1)
+            addDay(Day(cal.time, Content(cal.time.time.toString())))
+            cal.add(Calendar.YEAR, -1)
+            addDay(Day(cal.time, Content(cal.time.time.toString())))
+            cal.add(Calendar.YEAR, -1)
+            addDay(Day(cal.time, Content(cal.time.time.toString())))
+            count = dayTable.count(readableDatabase).toInt()
+        }
+
+        return count
     }
 }
