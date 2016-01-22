@@ -18,7 +18,7 @@
             android:id="@+id/day_content_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ff00ff"
+            android:padding="@dimen/padding_medium"
             android:visibility="visible" />
     </RelativeLayout>
 </ScrollView>
