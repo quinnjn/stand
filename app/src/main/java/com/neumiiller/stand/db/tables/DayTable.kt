@@ -37,7 +37,7 @@ class DayTable : Table {
         values.put(KEY_TIME, time.time)
 
         val rowsEffected = wDb.update(getTableName(), values, "$KEY_TIME = ${time.time}", null)
-        if(rowsEffected == 0) {
+        if(rowsEffected < 1) {
             id = wDb.insert(getTableName(), null, values)
         }
 
