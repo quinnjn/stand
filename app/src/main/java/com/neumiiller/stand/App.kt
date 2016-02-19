@@ -1,7 +1,6 @@
 package com.neumiiller.stand
 
 import android.app.Application
-import android.os.Bundle
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 

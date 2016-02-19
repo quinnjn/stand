@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initializeViews() {
         setSupportActionBar(toolbar)
         fab?.setOnClickListener { view ->
-            presenter.onFabClick(pager?.currentItem)
+            presenter.createDay()
         }
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)

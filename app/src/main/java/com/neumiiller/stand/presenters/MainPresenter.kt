@@ -2,6 +2,7 @@ package com.neumiiller.stand.presenters
 
 import android.content.Context
 import android.view.View
+import android.widget.Toast
 import com.neumiiller.stand.actor.MainActor
 import com.neumiiller.stand.adapters.DayPagerAdapter
 import com.neumiiller.stand.db.StandDB
@@ -38,15 +39,10 @@ class MainPresenter(activity: MainActivity) : OnDayChangeListener {
         }
     }
 
-    fun onFabClick(position: Int?) {
-//        if (position == null) {
-//            return
-//        }
-//        val day = pagerAdapter.getDay(position)
-//        if (day != null) {
-//            pagerAdapter.setEditable(position, this);
-//        }
+    fun createDay() {
+        Toast.makeText(context, "yo", Toast.LENGTH_SHORT).show()
     }
+
     override fun change(day: Day) {
         standDb.addDay(day)
     }
