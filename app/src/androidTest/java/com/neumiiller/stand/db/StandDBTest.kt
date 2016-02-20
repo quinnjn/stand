@@ -2,6 +2,7 @@ package com.neumiiller.stand.db
 
 import android.test.AndroidTestCase
 import android.test.RenamingDelegatingContext
+import com.neumiiller.stand.extensions.normalize
 import com.neumiiller.stand.models.Content
 import com.neumiiller.stand.models.Day
 import java.util.*
@@ -12,6 +13,7 @@ import java.util.*
 class StandDBTest : AndroidTestCase() {
 
     private var db: StandDB? = null
+    private val blankContent = Content("blank")
 
     override fun setUp() {
         super.setUp()
@@ -40,5 +42,18 @@ class StandDBTest : AndroidTestCase() {
         val actualDay = db?.getDay(time)
 
         assertNull(actualDay)
+    }
+
+    public fun testGetPosition() {
+        val cal = Calendar.getInstance()
+        for(i in 5..0) {
+            val expected = i;
+            cal.set(i, 1, 1)
+            val time = cal.time
+            val day = Day(time, blankContent)
+            db?.addDay(day)
+            val actual = db?.getDayPosition(day)
+            assertEquals(i, actual)
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.neumiiller.stand.BuildConfig
 import com.neumiiller.stand.db.tables.DayTable
+import com.neumiiller.stand.extensions.normalize
 import com.neumiiller.stand.models.Content
 import com.neumiiller.stand.models.Day
 import java.util.*
@@ -45,6 +46,10 @@ class StandDB(context: Context) : SQLiteOpenHelper(context, StandDB.NAME, null, 
 
     fun getDay(position: Int): Day {
         return dayTable.get(readableDatabase, position)
+    }
+
+    fun getDayPosition(day: Day): Int {
+        return dayTable.getPosition(readableDatabase, day.time)
     }
 
     fun getDayCount(): Int {

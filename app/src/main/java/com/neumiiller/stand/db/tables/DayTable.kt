@@ -72,4 +72,20 @@ class DayTable : Table {
     fun count(db: SQLiteDatabase): Long {
         return DatabaseUtils.queryNumEntries(db, getTableName())
     }
+
+    fun getPosition(db: SQLiteDatabase, time: Date): Int {
+        time.normalize()
+        val query = "SELECT * FROM ${getTableName()} ORDER BY $KEY_TIME DESC"
+        val cursor = db.rawQuery(query, null);
+        if(cursor == null || cursor.count == 0) {
+            return 0
+        }
+        while(cursor.moveToNext()) {
+            val cursorTime = Date(cursor.getLong(cursor.getColumnIndex(KEY_TIME)))
+            if(time.equals(cursorTime)) {
+                return cursor.position
+            }
+        }
+        return 0
+    }
 }
